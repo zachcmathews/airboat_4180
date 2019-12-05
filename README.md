@@ -25,6 +25,6 @@ Lake floor LiDAR mapping airboat controlled via Bluetooth
 | 5V/2A Power Supply | Raspberry Pi Zero W | TFmini Plus Li-DAR |
 |--------------------|---------------------|--------------------|
 | 5V                 |                     | 5V                 |
-|                    | TXD (GPIO14)        | RX (WHITE/BLUE)    |
-|                    | RXD (GPIO15)        | TX (GREEN)         |
+|                    | TXD (GPIO 14)       | RX (WHITE/BLUE)    |
+|                    | RXD (GPIO 15)       | TX (GREEN)         |
 | GND                | GND                 | GND                |
