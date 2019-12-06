@@ -37,14 +37,28 @@ In order to use your phone as a Bluetooth remote, download the Android app found
 
 Then follow the steps below to pair your Raspberry Pi Zero W.
 
-### Make your Raspberry Pi Discoverable:
+### Setup the Serial Port (SP) profile:
+`sudo nano /etc/systemd/system/dbus-org.bluez.service`\
+Add -C to the `ExecStart` statement to start the Bluetooth daemon in compatibility mode:\
+`ExecStart=/usr/lib/bluetooth/bluetoothd -C`\
+Add the following statement below the `ExecStart` line to enable the SP Profile:\
+`ExecStartPost=/usr/bin/sdptool add SP`\
+Reboot to make changes take effect:\
+`sudo reboot`
+
+### Make your Raspberry Pi discoverable:
 `sudo bluetoothctl`\
-`discoverable on`\
-`alias raspi0`
+`alias raspi0`\
+`discoverable on`
 
 Now, pair with the device `raspi0` in your phone's settings. If asked to verify pairing with a pin, do so.
 
-### Using the Remote
+Emulate a serial port over Bluetooth using the RFCOMM protocol:\
+`sudo rfcomm watch hci0`
+
+Open another console to run the project code. I suggest [ConEmu](https://conemu.github.io/).
+
+### Using the remote:
 1.) Click the settings (gear) icon\
 2.) Click "Connect to car"\
 3.) Select `raspi0` from the list\
