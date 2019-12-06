@@ -38,9 +38,10 @@ In order to use your phone as a Bluetooth remote, download the Android app found
 Then follow the steps below to pair your Raspberry Pi Zero W.
 
 ### Make your Raspberry Pi Discoverable:
-`sudo bluetoothctl`
-`discoverable on`
-`alias raspi0`
+`sudo bluetoothctl`\
+`discoverable on`\
+`alias raspi0`\
+
 Now, pair with the device `raspi0` in your phone's settings. If asked to verify pairing with a pin, do so.
 
 ### Using the Remote
