@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import serial
-import time
+import sys
 
 ser = serial.Serial("/dev/serial0", baudrate=115200, timeout=1)
 ser.write(chr(0x47))

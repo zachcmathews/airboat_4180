@@ -1,9 +1,7 @@
+#ifndef SIMPLEIO
 #define SIMPLEIO
 
-#ifndef PIGPIO
 #include <pigpio.h>
-#define PIGPIO
-#endif
 
 class DigitalOut
 {
@@ -31,3 +29,5 @@ class PWMOut
 	unsigned int range;
 	unsigned int duty;
 };
+
+#endif

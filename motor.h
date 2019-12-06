@@ -1,8 +1,7 @@
+#ifndef MOTOR
 #define MOTOR
 
-#ifndef SIMPLEIO
 #include "simpleio.h"
-#endif
 
 class Motor 
 {
@@ -16,3 +15,5 @@ class Motor
 	DigitalOut fwd;
 	DigitalOut rev; 
 };
+
+#endif
