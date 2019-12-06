@@ -45,8 +45,8 @@ Then follow the steps below to pair your Raspberry Pi Zero W.
 Now, pair with the device `raspi0` in your phone's settings. If asked to verify pairing with a pin, do so.
 
 ### Using the Remote
-1.) Click the settings (gear) icon
-2.) Click "Connect to car"
-3.) Select `raspi0` from the list
-4.) Use the direction buttons to control the boat
+1.) Click the settings (gear) icon\
+2.) Click "Connect to car"\
+3.) Select `raspi0` from the list\
+4.) Use the direction buttons to control the boat\
 5.) Or click the settings (gear) icon and click "Accelerometer control" to control the boat with your phone's gyroscopic sensors.
