@@ -28,3 +28,21 @@ Lake floor LiDAR mapping airboat controlled via Bluetooth
 |                    | TXD (GPIO 14)       | RX (WHITE/BLUE)    |
 |                    | RXD (GPIO 15)       | TX (GREEN)         |
 | GND                | GND                 | GND                |
+
+## Bluetooth Setup
+In order to use your phone as a Bluetooth remote, download the Android app found here: https://play.google.com/store/apps/details?id=braulio.calle.bluetoothRCcontroller&hl=en_US
+
+Then follow the steps below to pair your Raspberry Pi Zero W.
+
+### Make your Raspberry Pi Discoverable:
+`sudo bluetoothctl`
+`discoverable on`
+`alias raspi0`
+Now, pair with the device `raspi0` in your phone's settings. If asked to verify pairing with a pin, do so.
+
+### Using the Remote
+1.) Click the settings (gear) icon
+2.) Click "Connect to car"
+3.) Select `raspi0` from the list
+4.) Use the direction buttons to control the boat
+5.) Or click the settings (gear) icon and click "Accelerometer control" to control the boat with your phone's gyroscopic sensors.
