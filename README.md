@@ -32,7 +32,7 @@ Use the tables below to ensure proper connection of each part of your boat.
 |                    | RXD (GPIO 15)       | TX (GREEN)         |
 | GND                | GND                 | GND                |
 
-## Bluetooth Setup
+## Setting up Bluetooth
 In order to use your phone as a Bluetooth remote, download the Android app found here: https://play.google.com/store/apps/details?id=braulio.calle.bluetoothRCcontroller&hl=en_US
 
 Then follow the steps below to pair your Raspberry Pi Zero W.
