@@ -1,5 +1,15 @@
-# airboat_4180
-Lake floor LiDAR mapping airboat controlled via Bluetooth
+# Airboat 4180
+The Airboat Model 4180 was designed and built for the final embedded design project in Embedded Systems Design (ECE4180) at Georgia Tech by Zachary Mathews. It makes use of a GPS and waterproof Li-DAR module to map the bottom of a body of water. It works best in non-turbid water. The following instructions will guide you to creating your own.
+
+## Parts List
+[CanaKit Raspberry Pi Zero W Kit](https://www.amazon.com/gp/product/B072N3X39J/ref=ppx_yo_dt_b_asin_title_o08_s00?ie=UTF8&psc=1)\
+[Brushless DC Motor](https://www.amazon.com/gp/product/B00BG9K2VQ/ref=ppx_yo_dt_b_asin_title_o04_s00?ie=UTF8&psc=1)\
+[Waterproof Servo](https://www.amazon.com/gp/product/B076CNKQX4/ref=ppx_yo_dt_b_asin_title_o00_s01?ie=UTF8&psc=1)\
+[Waterproof TFmini Plus Li-DAR](https://www.amazon.com/gp/product/B07PWW3FWJ/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1)\
+[NEO-6M GPS Module](https://www.amazon.com/gp/product/B01D1D0F5M/ref=ppx_yo_dt_b_asin_title_o04_s01?ie=UTF8&psc=1)\
+[USB to TTL Adapter](https://www.amazon.com/gp/product/B075N82CDL/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1)\
+[8" Propeller](https://www.amazon.com/gp/product/B007AFYNZG/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&psc=1)\
+
 
 ## Building the boat
 Use the tables below to ensure proper connection of each part of your boat.
