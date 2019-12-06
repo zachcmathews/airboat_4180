@@ -5,7 +5,7 @@ The Airboat Model 4180 was designed and built for the final design project in Em
 ## Parts List
 [Aluminum Paint Tray](https://www.walmart.com/ip/METAL-TRAY/17165827?wmlspartner=wlpa&selectedSellerId=0&wl13=3775&adid=22222222227016740642&wl0=&wl1=g&wl2=c&wl3=48112424552&wl4=pla-96451202432&wl5=9010937&wl6=&wl7=&wl8=&wl9=pla&wl10=8175035&wl11=local&wl12=17165827&veh=sem&gclid=CjwKCAiA8qLvBRAbEiwAE_ZzPfbbJKlvOlJf9ABkXKlE1sk-SRmC3CgY20eVEAUPCWGY1to3k5PSqBoCwb8QAvD_BwE)\
 [(2) 1/4" Dowel Rods](https://www.amazon.com/Dowel-Rod-Wood-inches-pieces/dp/B004BQ0DGK)\
-[Waterproof Glue](https://www.amazon.com/Gorilla-Clear-Contact-Adhesive-Waterproof/dp/B06WGSRM4Z/ref=sr_1_3?keywords=waterproof+glue&qid=1575601076&sr=8-3)
+[Waterproof Glue](https://www.amazon.com/Gorilla-Clear-Contact-Adhesive-Waterproof/dp/B06WGSRM4Z/ref=sr_1_3?keywords=waterproof+glue&qid=1575601076&sr=8-3)\
 [CanaKit Raspberry Pi Zero W Kit](https://www.amazon.com/gp/product/B072N3X39J/ref=ppx_yo_dt_b_asin_title_o08_s00?ie=UTF8&psc=1)\
 [Brushless DC Motor](https://www.amazon.com/gp/product/B00BG9K2VQ/ref=ppx_yo_dt_b_asin_title_o04_s00?ie=UTF8&psc=1)\
 [Waterproof Servo](https://www.amazon.com/gp/product/B076CNKQX4/ref=ppx_yo_dt_b_asin_title_o00_s01?ie=UTF8&psc=1)\
