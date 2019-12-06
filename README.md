@@ -7,6 +7,7 @@ The Airboat Model 4180 was designed and built for the final design project in Em
 [(2) 1/4" Dowel Rods](https://www.amazon.com/Dowel-Rod-Wood-inches-pieces/dp/B004BQ0DGK)\
 [Waterproof Glue](https://www.amazon.com/Gorilla-Clear-Contact-Adhesive-Waterproof/dp/B06WGSRM4Z/ref=sr_1_3?keywords=waterproof+glue&qid=1575601076&sr=8-3)\
 [CanaKit Raspberry Pi Zero W Kit](https://www.amazon.com/gp/product/B072N3X39J/ref=ppx_yo_dt_b_asin_title_o08_s00?ie=UTF8&psc=1)\
+[H-Bridge Dual TB6612FNG Motor Driver](https://www.sparkfun.com/products/14450)
 [Brushless DC Motor](https://www.amazon.com/gp/product/B00BG9K2VQ/ref=ppx_yo_dt_b_asin_title_o04_s00?ie=UTF8&psc=1)\
 [Waterproof Servo](https://www.amazon.com/gp/product/B076CNKQX4/ref=ppx_yo_dt_b_asin_title_o00_s01?ie=UTF8&psc=1)\
 [Waterproof TFmini Plus Li-DAR](https://www.amazon.com/gp/product/B07PWW3FWJ/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1)\
