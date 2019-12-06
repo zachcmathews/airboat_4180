@@ -1,7 +1,10 @@
 # airboat_4180
 Lake floor LiDAR mapping airboat controlled via Bluetooth
 
-## Brushless DC Motor (Propeller)
+## Building the boat
+Use the tables below to ensure proper connection of each part of your boat.
+
+### Brushless DC Motor (Propeller)
 | 5V/2A Power Supply | Raspberry Pi Zero W | H-Bridge Motor Driver | Brushless DC Motor |
 |--------------------|---------------------|-----------------------|--------------------|
 |                    | 3.3V                | Vcc                   |                    |
@@ -14,14 +17,14 @@ Lake floor LiDAR mapping airboat controlled via Bluetooth
 |                    |                     | AOUT2                 | NEGATIVE           |
 | GND                | GND                 | GND                   |                    |
 
-## Servo
+### Servo
 | 5V/2A Power Supply | Raspberry Pi Zero W | Servo |
 |--------------------|---------------------|-------|
 |                    | 5V                  | 5V    |
 |                    | GPIO 18             | PWM   |
 | GND                | GND                 | GND   |
 
-## TFmini Plus Li-DAR
+### TFmini Plus Li-DAR
 | 5V/2A Power Supply | Raspberry Pi Zero W | TFmini Plus Li-DAR |
 |--------------------|---------------------|--------------------|
 |                    | 5V                  | 5V                 |
