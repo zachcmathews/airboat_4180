@@ -38,11 +38,14 @@ In order to use your phone as a Bluetooth remote, download the Android app found
 Then follow the steps below to pair your Raspberry Pi Zero W.
 
 ### Setup the Serial Port (SP) profile:
-`sudo nano /etc/systemd/system/dbus-org.bluez.service`\
+`sudo nano /etc/systemd/system/dbus-org.bluez.service`
+
 Add -C to the `ExecStart` statement to start the Bluetooth daemon in compatibility mode:\
-`ExecStart=/usr/lib/bluetooth/bluetoothd -C`\
+`ExecStart=/usr/lib/bluetooth/bluetoothd -C`
+
 Add the following statement below the `ExecStart` line to enable the SP Profile:\
-`ExecStartPost=/usr/bin/sdptool add SP`\
+`ExecStartPost=/usr/bin/sdptool add SP`
+
 Reboot to make changes take effect:\
 `sudo reboot`
 
