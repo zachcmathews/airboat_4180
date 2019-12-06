@@ -22,7 +22,7 @@ Use the tables below to ensure proper connection of each part of your boat.
 #### Brushless DC Motor (Propeller)
 | 5V/2A Power Supply | Raspberry Pi Zero W | H-Bridge Motor Driver | Brushless DC Motor |
 |--------------------|---------------------|-----------------------|--------------------|
-|                    | 3.3V                | Vcc                   |                    |
+|                    | 3.3V                | VCC                   |                    |
 |                    | GPIO 5              | PWMA                  |                    |
 |                    | GPIO 6              | AIN1                  |                    |
 |                    | GPIO 13             | AIN2                  |                    |
@@ -49,7 +49,7 @@ Use the tables below to ensure proper connection of each part of your boat.
 
 
 ## Setting up Bluetooth
-In order to use your phone as a Bluetooth remote, download the Android app found here: https://play.google.com/store/apps/details?id=braulio.calle.bluetoothRCcontroller&hl=en_US
+In order to use your phone as a Bluetooth remote, download the Android app found here: https://play.google.com/store/apps/details?id=com.hamzaburakhan.btremotecontrolarduino&hl=en_US
 
 Then follow the steps below to pair your Raspberry Pi Zero W.
 
@@ -78,8 +78,5 @@ Emulate a serial port over Bluetooth using the RFCOMM protocol:\
 Open another console to run the project code. I suggest [ConEmu](https://conemu.github.io/).
 
 ### Using the remote:
-1.) Click the settings (gear) icon\
-2.) Click "Connect to car"\
-3.) Select `raspi0` from the list\
-4.) Use the direction buttons to control the boat\
-5.) Or click the settings (gear) icon and click "Accelerometer control" to control the boat with your phone's gyroscopic sensors.
+1.) Select `raspi0` from the paired devices list.\
+2.) Watch the ad (bleh). Then select `Tilt control`.
