@@ -11,68 +11,20 @@
 #include "simpleio.h"
 #include "motor.h"
 #include "servo.h"
+#include "serial.h"
 
 #define STANDBY 19
 
 int lidar_handle;
-int gps_handle;
-
-class Bluetooth {
-	public:
-	Bluetooth(char* port, int baudrate)
-	{
-		_handle = open(port, O_RDWR | O_NOCTTY | O_NDELAY);		// open with R/W, no tty control, open immediately
-		if (_handle == -1)
-		{
-			perror("Unable to open port ______");
-		}
-
-		memset(&_buf, '\0', sizeof(_buf));
-
-		fcntl(_handle, F_SETFL, 0);						// turn off blocking for reads
-
-		tcgetattr(_handle, &_options);					// get current settings
-		cfsetspeed(&_options, baudrate);				// set baudrate
-		_options.c_cflag &= ~CSTOPB;					// use only one stop bit
-		_options.c_cflag |= CLOCAL;					// ignore status lines
-		_options.c_cflag |= CREAD;					// enable receiver
-		cfmakeraw(&_options);						// apply options
-		tcsetattr(_handle, TCSANOW, &_options);				// update settings
-		sleep(1);
-
-		read(_handle, nullptr, 256*1000);
-	}
-
-	char* readLine()
-	{
-		memset(&_buf, '\0', sizeof(_buf));
-		int n = read(_handle, &_buf, sizeof(_buf));
-		return _buf;
-	}
-
-	char readByte()
-	{
-		memset(&_buf, '\0', sizeof(_buf));
-		int n = read(_handle, &_buf, sizeof(char));
-		return _buf[0];
-	}
-
-	~Bluetooth()
-	{
-		close(_handle);
-	}
-
-	private:
-	int _handle;
-	struct termios _options;
-	char _buf[256];
-};
+pthread_t *gpsThread;
+pthread_t *lidarThread;
 
 void sigHandler(int sig_num)
 {
 	serClose(lidar_handle);		// close lidar serial connection
-	serClose(gps_handle);		// close gps serial connection
 	gpioWrite(STANDBY, 0);		// turn off dc motor
+	gpioStopThread(gpsThread);	// close serial connection and stop
+	gpioStopThread(lidarThread);	// close serial connection and stop`
 	gpioTerminate();		// Terminate use of GPIO library
 
 	signal(SIGINT, SIG_DFL);	// exit program
@@ -84,6 +36,34 @@ void sigHandler(int sig_num)
 static void exit_handler(void)
 {
 	gpioTerminate();
+}
+
+void* gpsHandler(void *arg)
+{
+	std::cout << "Handling GPS" << std::endl;
+	Serial gps("/dev/ttyUSB0", 9600);
+	while (true)
+	{
+		std::string line = gps.readLine();
+		if (!line.empty())
+		{
+			std::cout << line << std::endl;
+		}
+	}
+}
+
+void* lidarHandler(void *arg)
+{
+	std::cout << "Handling LiDAR" << std::endl;
+	lidar_handle = serOpen("/dev/ttyS0", 115200, 0);
+	while (lidar_handle >= 0) 
+	{
+		if (serDataAvailable(lidar_handle))
+		{
+			std::cout << serReadByte(lidar_handle) << std::endl;
+		}
+	}
+	serClose(lidar_handle);
 }
 
 int main(int argc, char *argv[])
@@ -128,10 +108,13 @@ int main(int argc, char *argv[])
 	sleep(2);
 	servo.pos(135);
 	sleep(1);
+
+	gpsThread = gpioStartThread(gpsHandler, nullptr); sleep(3);
+	lidarThread = gpioStartThread(lidarHandler, nullptr); sleep(3);
 	
 	// Test Bluetooth
 	std::cout << "Testing Bluetooth" << std::endl;
-	Bluetooth bt("/dev/rfcomm0", 9600);
+	Serial bt("/dev/rfcomm0", 9600);
 	while (true)
 	{
 		std::string line = bt.readLine();
@@ -182,15 +165,7 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-
-	// Test LiDAR sensor
-	lidar_handle = serOpen("/dev/ttyS0", 115200, 0);
-	while (lidar_handle >= 0) 
-	{
-		std::cout << serReadByte(lidar_handle) << std::endl;
-	}
-	serClose(lidar_handle);
-
+	
 	gpioTerminate();				// Terminate use of GPIO library
 	return 0;
 }
