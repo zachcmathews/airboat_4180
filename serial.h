@@ -10,7 +10,6 @@
 #include <errno.h>		// Error integer and strerror()
 #include <termios.h>		// POSIX terminal control definition
 
-
 class Serial {
 	public:
 	Serial(char* port, int baudrate);
@@ -21,7 +20,7 @@ class Serial {
 	private:
 	int _handle;
 	struct termios _options;
-	char _buf[256];
+	char _buf[10*1024];
 };
 
 #endif
