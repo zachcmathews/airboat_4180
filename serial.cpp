@@ -1,37 +1,52 @@
 #include "serial.h"
 
 Serial::Serial(char* port, int baudrate)
+	: _port(port), _baudrate(baudrate)
 {
-	_handle = open(port, O_RDWR | O_NOCTTY | O_NDELAY);		// open with R/W, no tty control, nonblocking I/O
+	connect();
+}
+
+void Serial::connect()
+{
+	_handle = open(_port, O_RDWR | O_NOCTTY | O_NDELAY);			// open with R/W, no tty control, nonblocking I/O
 	if (_handle == -1)
 	{
-		perror("Unable to open port ______");
+		_isOpen = false;
 	}
-
-	if (!isatty(_handle))
+	else
 	{
-		perror("Not a tty device");
+		memset(&_buf, '\0', sizeof(_buf));
+
+		fcntl(_handle, F_SETFL, 0);					// turn off blocking for reads
+		tcgetattr(_handle, &_options);					// get current settings
+		cfsetispeed(&_options, _baudrate);				// set baudrate
+		_options.c_cflag &= ~CSTOPB;					// use only one stop bit
+		_options.c_cflag |= CLOCAL;					// ignore status lines
+		_options.c_cflag |= CREAD;					// enable receiver
+		cfmakeraw(&_options);						// apply options
+		tcsetattr(_handle, TCSANOW, &_options);				// update settings
+
+		sleep(1);
+		tcflush(_handle,TCIOFLUSH);					// flush buffer
+
+		_isOpen = true;
+	}
+}
+
+bool Serial::isOpen()
+{
+	if (!_isOpen)
+	{
+		connect();
 	}
 
-	memset(&_buf, '\0', sizeof(_buf));
-
-	fcntl(_handle, F_SETFL, 0);					// turn off blocking for reads
-	tcgetattr(_handle, &_options);					// get current settings
-	cfsetispeed(&_options, baudrate);				// set baudrate
-	_options.c_cflag &= ~CSTOPB;					// use only one stop bit
-	_options.c_cflag |= CLOCAL;					// ignore status lines
-	_options.c_cflag |= CREAD;					// enable receiver
-	cfmakeraw(&_options);						// apply options
-	tcsetattr(_handle, TCSANOW, &_options);				// update settings
-
-	sleep(1);
-	tcflush(_handle,TCIOFLUSH);					// flush port
+	return _isOpen;
 }
 
 char* Serial::readLine()
 {
 	memset(&_buf, '\0', sizeof(_buf));
-	int i = 0;
+	unsigned i = 0;
 	int n = 0;
 	do {
 		n = read(_handle, &_buf[i], sizeof(char));

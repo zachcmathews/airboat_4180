@@ -13,12 +13,17 @@
 class Serial {
 	public:
 	Serial(char* port, int baudrate);
+	bool isOpen();
 	char* readLine();
 	char readByte();
 	~Serial();
 
 	private:
+	void connect();
+	char* _port;
+	int _baudrate;
 	int _handle;
+	bool _isOpen;
 	struct termios _options;
 	char _buf[10*1024];
 };

@@ -3,15 +3,6 @@ import serial
 import sys
 
 ser = serial.Serial("/dev/serial0", baudrate=115200, timeout=1)
-ser.write(chr(0x47))
-ser.write(chr(0x57))
-ser.write(chr(0x02))
-ser.write(chr(0x00))
-ser.write(chr(0x00))
-ser.write(chr(0x00))
-ser.write(chr(0x01))
-ser.write(chr(0x06))
-
 while (True):
     while (ser.in_waiting >= 9):
         if (('Y' == ser.read()) and ('Y' == ser.read())):

@@ -24,15 +24,14 @@
 
 #define PI 3.14159
 #define RADIUS_EARTH 6378100
+#define DIST_THRESHOLD 10.0
 
 int lidar_handle;
 pthread_t *gpsThread;
 pthread_t *lidarThread;
+char* logFile;
 
-unsigned gpsReady;
-unsigned lidarReady;
-
-bool logDepth = true;
+bool logDepth = false;
 float logged_x = 0;
 float logged_y = 0;
 float logged_z = 0;
@@ -43,7 +42,7 @@ void sigHandler(int sig_num)
 	gpioWrite(STANDBY, 0);		// turn off dc motor
 	gpioStopThread(gpsThread);	// close serial connection and stop
 	gpioStopThread(lidarThread);	// close serial connection and stop`
-	gpioTerminate();		// Terminate use of GPIO library
+	gpioTerminate();		// terminate use of GPIO library
 
 	signal(SIGINT, SIG_DFL);	// exit program
 	kill(getppid(), SIGINT);	// kill program
@@ -59,114 +58,148 @@ static void exit_handler(void)
 void* gpsHandler(void *arg)
 {
 	std::cout << "Handling GPS" << std::endl;
-	Serial gps("/dev/ttyUSB0", 9600);
+	char* usb = "/dev/ttyUSB0";
+	Serial gps(usb, 9600);
 	while (true)
 	{
-		std::string sentence(gps.readLine());
-		if (!sentence.empty())
+		if (gps.isOpen())
 		{
-			if (sentence.find("$GPGGA") != std::string::npos)
+			std::string sentence(gps.readLine());
+			if (!sentence.empty())
 			{
-				std::cout << sentence << std::endl;
-				
-				// Parse NMEA sentence
-				int utc_begin = sentence.find(",")+1;
-				int utc_end = sentence.find(",",utc_begin);
-				int lat_begin = utc_end+1;
-				int lat_end = sentence.find(",", lat_begin);
-				int lat_hemi_index = lat_end+1;
-				int long_begin = lat_hemi_index+2;
-				int long_end = sentence.find(",", long_begin);
-				int long_hemi_index = long_end+1;
-
-				std::string latitude = sentence.substr(lat_begin,lat_end-lat_begin);
-				char latitude_hemisphere = sentence.at(lat_hemi_index);
-				std::string longitude = sentence.substr(long_begin, long_end-long_begin);
-				char longitude_hemisphere = sentence.at(long_hemi_index);
-
-				std::cout << latitude + " " + latitude_hemisphere << std::endl;
-				std::cout << longitude + " " + longitude_hemisphere << std::endl;
-				
-				if (!latitude.empty() && !longitude.empty())
+				if (sentence.find("GGA") != std::string::npos)
 				{
-					// Convert degrees, decimal minutes to degrees
-					float lat_deg = stof(latitude.substr(0,2)) + (stof(latitude.substr(3,std::string::npos)) / 60.0); 
-					float long_deg = stof(longitude.substr(0,3)) + (stof(longitude.substr(4,std::string::npos)) / 60.0);
-
-					// Convert degrees to radians
-					float lat_rad = (PI/180.0) * lat_deg;
-					float long_rad = (PI/180.0) * long_deg;
-
-					// Convert to x,y coordinates
-					float x = RADIUS_EARTH * long_rad * cos(lat_rad);
-					float y = RADIUS_EARTH * lat_rad * cos(lat_rad);
-				
-					std::cout << "X: " << x << " Y: " << y << std::endl;
+					// Just some logging
+					std::cout << sentence << std::endl;
 					
-					float dist_from_logged = sqrt(x*x - logged_x*logged_x + y*y - logged_y*logged_y);
-					if (dist_from_logged > 5.0)
-					{
-						logged_x = x;
-						logged_y = y;
-						logDepth = true;
-					}				
+					// Parse NMEA sentence
+					int utc_begin = sentence.find(",");
+					int utc_end = sentence.find(",",utc_begin+1);
+					int lat_begin = utc_end+1;
+					int lat_end = sentence.find(",",utc_end+1);
+					int lat_hemi_begin = lat_end+1;
+					int lat_hemi_end = sentence.find(",",lat_end+1);
+					int long_begin = lat_hemi_end+1;
+					int long_end = sentence.find(",",lat_hemi_end+1);
+					int long_hemi_begin = long_end+1;
+					int long_hemi_end = sentence.find(",",long_end+1);
+					int gps_fix = sentence.at(sentence.find(",", long_hemi_end+1)-1);
 
-					std::cout << "Distance from logged: " << dist_from_logged << std::endl;
+					if (gps_fix != '0')
+					{
+						// Extract latitude and longitude
+						std::string latitude = sentence.substr(lat_begin,lat_end-lat_begin);
+						std::string latitude_hemisphere = sentence.substr(lat_hemi_begin,lat_hemi_end-lat_hemi_begin);
+						std::string longitude = sentence.substr(long_begin,long_end-long_begin);
+						std::string longitude_hemisphere = sentence.substr(long_hemi_begin,long_hemi_end-long_hemi_begin);
+
+						std::cout << latitude + " " + latitude_hemisphere << std::endl;
+						std::cout << longitude + " " + longitude_hemisphere << std::endl;
+
+						// Convert degrees, decimal minutes to degrees
+						if (!latitude.empty() && !longitude.empty())
+						{
+							float lat_deg = stof(latitude.substr(0,2)) + (stof(latitude.substr(3,std::string::npos)) / 60.0); 
+							float long_deg = stof(longitude.substr(0,3)) + (stof(longitude.substr(4,std::string::npos)) / 60.0);
+
+							// Convert degrees to radians
+							float lat_rad = (PI/180.0) * lat_deg;
+							float long_rad = (PI/180.0) * long_deg;
+
+							// Convert to x,y coordinates
+							float x = RADIUS_EARTH * long_rad * cos(lat_rad);
+							float y = RADIUS_EARTH * lat_rad * cos(lat_rad);
+						
+							std::cout << "X: " << x << " Y: " << y << std::endl;
+							
+							// Calculate distance from last logged value
+							// and log if greater than DIST_THRESHOLD
+							float dist_from_logged = sqrt(x*x - logged_x*logged_x + y*y - logged_y*logged_y);
+							if (dist_from_logged > DIST_THRESHOLD)
+							{
+								logged_x = x;
+								logged_y = y;
+								logDepth = true;
+							}				
+							std::cout << "Distance from logged: " << dist_from_logged << std::endl;
+						}
+					}
+					else
+					{
+						std::cout << "No GPS fix" << std::endl;
+					}
 				}
 			}
 		}
-	}
+		else
+		{
+				std::cout << "Could not connect to GPS. Attempting to connect..." << std::endl;
+				sleep(1);							// sleep thread when not connected to GPS
+		}
 
+	}
 }
 
 void* lidarHandler(void *arg)
 {
 	std::cout << "Handling LiDAR" << std::endl;
-	lidar_handle = serOpen("/dev/ttyS0", 115200, 0);
-	if (lidar_handle >= 0)
-	{
-		std::ofstream log;
-		log.open("/var/www/html/data.csv");
-		log << "x,y,z" << std::endl;
+	std::cout << logFile << std::endl;
 
-		while (true) 
+	// Open log file
+	std::ofstream log;
+	log.open(logFile);
+	log << "x,y,z" << std::endl;
+	log.close();
+
+	char* uart = "/dev/serial0";
+	lidar_handle = serOpen(uart, 115200, 0);
+	while (true)
+	{
+		if (lidar_handle >= 0)
 		{
-			unsigned bytes = 0;
-			std::string data;
-			if (serDataAvailable(lidar_handle) >= 9)
+			if (serDataAvailable(lidar_handle)>=9)
 			{
 				// Read data
-				char header_1;
-				serRead(lidar_handle, &header_1, 1);
-				char header_2;
-				serRead(lidar_handle, &header_2, 1);
-				char dist_L;
-				serRead(lidar_handle, &dist_L, 1);
-				char dist_H;
-				serRead(lidar_handle, &dist_H, 1);
-				char extra[5];
-				serRead(lidar_handle, extra, 5);
-				
-				// Parse data
-				float z = (256 * (int) dist_H + (int) dist_L) / 100.0;
+				char header[2], dist_H, dist_L;
+				serRead(lidar_handle, header, 2);
+				if (header[0] == 'Y' && header[1] == 'Y')
+				{
+					serRead(lidar_handle, &dist_L, 1);
+					serRead(lidar_handle, &dist_H, 1);
+					serRead(lidar_handle, nullptr, 4);			// get rid of excess
+				}
 
-				// Log depth when >5m from last log
+				// Parse data
+				float z = -1 * (256 * (int) dist_H + (int) dist_L) / 100.0;
+				std::cout << z << std::endl;
+
+				// Log depth in file when flag set
 				if (logDepth) {
+					log.open(logFile);
 					logged_z = z;
 					log << logged_x << "," << logged_y << "," << logged_z << std::endl;
 					logDepth = false;
+					log.close();
 
 					std::cout << "Logged data: " << logged_x << ", " << logged_y << ", " << logged_z << std::endl;
 				}
 			}
 		}
-		log.close();
-		serClose(lidar_handle);
 	}
+	serClose(lidar_handle);
 }
 
 int main(int argc, char *argv[])
 {
+	if (false) 
+	{
+		logFile = argv[argc-1];
+	}
+	else
+	{
+		logFile = "/var/www/html/data.csv";
+	}
+
 	// Initialize GPIO library
 	if (gpioInitialise() < 0) 
 	{
@@ -211,73 +244,92 @@ int main(int argc, char *argv[])
 	gpsThread = gpioStartThread(gpsHandler, nullptr); 
 	lidarThread = gpioStartThread(lidarHandler, nullptr);
 	
-	// Bluetooth
+	// Handle bluetooth
 	std::cout << "Handling Bluetooth" << std::endl;
-	Serial bt("/dev/rfcomm0", 9600);
-	while (true)
-	{
-		std::string line = bt.readLine();
-		if (!line.empty())
-		{
-			try {
-				// Get position sensor data
-				float x = std::stof(line.substr(line.find("X:")+2,line.find("Y:")));
-				float y = std::stof(line.substr(line.find("Y:")+2,line.find("Z:")));
-				float z = std::stof(line.substr(line.find("Z:")+2,line.find("#")));
-
-				//std::cout << "Y: " << y << " Z: " << z << std::endl;
+	char* rfcomm = "/dev/rfcomm0";
+	Serial bt(rfcomm, 9600);
 	
-				// Scale propeller speed and rudder position based on sensor data
-				// This could still be tweaked with more experimentation
-				float scaled_z = z / sqrt(z*z + x*x);
-				float scaled_y = sqrt(2)*y / sqrt(y*y + z*z);
-				
-				//std::cout << "Scaled Y: " << scaled_y << " Z: " << scaled_z << std::endl;
+	while (true)
+	{	
+		if (bt.isOpen())
+		{
+			std::string line = bt.readLine();
+			if (!line.empty())
+			{
+				try {
+					// Get position sensor data
+					float x = std::stof(line.substr(line.find("X:")+2,line.find("Y:")));
+					float y = std::stof(line.substr(line.find("Y:")+2,line.find("Z:")));
+					float z = std::stof(line.substr(line.find("Z:")+2,line.find("#")));
 
-				// Control rudder (servo)
-				if (scaled_y > 1.0) 
-				{
-					servo.pos(180);
-				}
-				else if (scaled_y < -1.0) 
-				{
-					servo.pos(270);
-				}
-				else
-				{
-					servo.pos(225-(int)45*scaled_y);
-				}
+					//std::cout << "Y: " << y << " Z: " << z << std::endl;
+		
+					// Scale propeller speed and rudder position based on sensor data
+					// This could still be tweaked with more experimentation
+					float scaled_z = z / sqrt(z*z + x*x);
+					float scaled_y = sqrt(2)*y / sqrt(y*y + z*z);
+					
+					//std::cout << "Scaled Y: " << scaled_y << " Z: " << scaled_z << std::endl;
+					
+					// Control rudder (servo)
+					if (scaled_y > 1.0) 
+					{
+						servo.pos(180);
+					}
+					else if (scaled_y < -1.0) 
+					{
+						servo.pos(270);
+					}
+					else
+					{
+						servo.pos(225-(int)45*scaled_y);
+					}
 
-				// Control propeller (dc motor)
-				if (scaled_z > 1.0) 
-				{
-					motor.speed(1.0);
-				}
-				else if (scaled_z < -1.0) 
-				{
-					motor.speed(-1.0);
-				}
-				else
-				{
-					motor.speed(scaled_z);
-				}
-						
+					// Control propeller (dc motor)
+					if (scaled_z > 1.0) 
+					{
+						motor.speed(1.0);
+					}
+					else if (scaled_z < -1.0) 
+					{
+						motor.speed(-1.0);
+					}
+					else
+					{
+						motor.speed(scaled_z);
+					}
+							
 
-			} catch (std::exception& ia) {
-				std::cerr << "Invalid argument: " << ia.what() << std::endl;
+				} catch (std::exception& ia) {
+					std::cerr << "Invalid argument: " << ia.what() << std::endl;
+					motor.speed(0);
+					motor.stop();
+					servo.pos(225);
+				}
+			}
+			else
+			{
+				// Stop propeller and set rudder to neutral position when
+				// Bluetooth drops connection
 				motor.speed(0);
 				motor.stop();
 				servo.pos(225);
 			}
+
+			usleep(32000);		// update ~30Hz
 		}
 		else
 		{
 			// Stop propeller and set rudder to neutral position when
 			// Bluetooth drops connection
-			servo.pos(225);
 			motor.speed(0);
 			motor.stop();
+			servo.pos(225);
+	
+			std::cout << "Bluetooth not connected. Attempting connection..." << std::endl;
+			sleep(1);		// sleep longer when not connected
 		}
+
 	}
 
 	serClose(lidar_handle);			// close lidar serial connection
@@ -285,5 +337,6 @@ int main(int argc, char *argv[])
 	gpioStopThread(gpsThread);		// close serial connection and stop
 	gpioStopThread(lidarThread);		// close serial connection and stop`
 	gpioTerminate();			// terminate use of GPIO library
+	
 	return 0;
 }
