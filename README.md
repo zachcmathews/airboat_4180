@@ -1,5 +1,5 @@
 # Airboat 4180
-The Airboat Model 4180 was designed and built for the final design project in Embedded Systems Design (ECE4180) at Georgia Tech by Zachary Mathews. It makes use of a GPS and waterproof Li-DAR module to map the floor of a body of non-turbid water. Here's  how it's made.
+The Airboat Model 4180 was designed and built for the final design project in Embedded Systems Design (ECE4180) at Georgia Tech by Zachary Mathews. It makes use of a GPS and waterproof Li-DAR module to map the floor of a body of non-turbid water. [Here's a short demo of the Bluetooth Control.](https://youtu.be/RI1v7Tg6mDw) And here's how it's made...
 
 ![Topo Map](https://github.com/zachcmathews/airboat_4180/blob/master/documentation/map.png)
 
