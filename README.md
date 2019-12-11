@@ -1,7 +1,7 @@
 # Airboat 4180
 The Airboat Model 4180 was designed and built for the final design project in Embedded Systems Design (ECE4180) at Georgia Tech by Zachary Mathews. It makes use of a GPS and waterproof Li-DAR module to map the floor of a body of non-turbid water. Here's  how it's made.
 
-!(https://github.com/zachcmathews/airboat_4180/blob/master/documentation/map.png)
+![Topo Map](https://github.com/zachcmathews/airboat_4180/blob/master/documentation/map.png)
 
 ## Parts List
 [Aluminum Paint Tray](https://www.walmart.com/ip/METAL-TRAY/17165827?wmlspartner=wlpa&selectedSellerId=0&wl13=3775&adid=22222222227016740642&wl0=&wl1=g&wl2=c&wl3=48112424552&wl4=pla-96451202432&wl5=9010937&wl6=&wl7=&wl8=&wl9=pla&wl10=8175035&wl11=local&wl12=17165827&veh=sem&gclid=CjwKCAiA8qLvBRAbEiwAE_ZzPfbbJKlvOlJf9ABkXKlE1sk-SRmC3CgY20eVEAUPCWGY1to3k5PSqBoCwb8QAvD_BwE)\
@@ -21,7 +21,7 @@ The Airboat Model 4180 was designed and built for the final design project in Em
 ## Building the boat
 
 ### The frame
-!(https://github.com/zachcmathews/airboat_4180/blob/master/documentation/frame.png)
+![Airboat Frame](https://github.com/zachcmathews/airboat_4180/blob/master/documentation/frame.png)
 #### Attaching the backer rod
 Apply glue below outside rim of paint tray. Stick backer rod to it. Tape each corner to secure while glue dries.
 
@@ -33,7 +33,7 @@ The rudder motor should be mounted directly below it with the screw dead center.
 The LiDAR may be mounted any where the lens is completely submerged and pointing nadir.
 
 ### The electronics
-!(https://github.com/zachcmathews/airboat_4180/blob/master/documentation/electronics.png)
+![The Guts](https://github.com/zachcmathews/airboat_4180/blob/master/documentation/electronics.png)
 
 #### DC Motor (Propeller)
 | Mini-B USB Breakout | Raspberry Pi Zero W | H-Bridge Motor Driver | Brushless DC Motor |
