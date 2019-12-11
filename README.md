@@ -40,17 +40,17 @@ The LiDAR may be mounted any where the lens is completely submerged and pointing
 ![The Guts](https://github.com/zachcmathews/airboat_4180/blob/master/documentation/electronics.jpg)
 
 #### DC Motor (Propeller)
-| Mini-B USB Breakout | Raspberry Pi Zero W | H-Bridge Motor Driver | Brushless DC Motor |
-|---------------------|---------------------|-----------------------|--------------------|
-|                     | 3.3V                | VCC                   |                    |
-|                     | GPIO 5              | PWMA                  |                    |
-|                     | GPIO 6              | AIN1                  |                    |
-|                     | GPIO 13             | AIN2                  |                    |
-|                     | GPIO 19             | STBY                  |                    |
-| VCC                 |                     | VM                    |                    |
-|                     |                     | AOUT1                 | POSITIVE           |
-|                     |                     | AOUT2                 | NEGATIVE           |
-| GND                 | GND                 | GND                   |                    |
+| Mini-B USB Breakout | Raspberry Pi Zero W | H-Bridge Motor Driver | DC Motor |
+|---------------------|---------------------|-----------------------|----------|
+|                     | 3.3V                | VCC                   |          |
+|                     | GPIO 5              | PWMA                  |          |
+|                     | GPIO 6              | AIN1                  |          |
+|                     | GPIO 13             | AIN2                  |          |
+|                     | GPIO 19             | STBY                  |          |
+| VCC                 |                     | VM                    |          |
+|                     |                     | AOUT1                 | POSITIVE |
+|                     |                     | AOUT2                 | NEGATIVE |
+| GND                 | GND                 | GND                   |          |
 
 #### Servo (Rudder)
 | Mini-B USB Breakout | Raspberry Pi Zero W | Servo |
