@@ -77,7 +77,7 @@ The LiDAR may be mounted any where the lens is completely submerged and pointing
 
 
 ## Setting up the webserver
-1.) Install Apache -> (https://www.raspberrypi.org/documentation/remote-access/web-server/apache.md)\
+1.) Install Apache -> [RaspberryPi.org: Setting up an Apache Web Server on a Raspberry Pi](https://www.raspberrypi.org/documentation/remote-access/web-server/apache.md)\
 2.) In `airboat_4180` directory run `sudo cp -rfv ./html/ /var/www/html/` to copy the webpage and sample data over.\
 3.) Navigate to the Raspberry Pi's IP address in a web browser. You should see a 3D plot.
 
