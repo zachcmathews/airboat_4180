@@ -99,22 +99,22 @@ void* gpsHandler(void *arg)
 						// Convert degrees, decimal minutes to degrees
 						if (!latitude.empty() && !longitude.empty())
 						{
-							float lat_deg = stof(latitude.substr(0,2)) + (stof(latitude.substr(3,std::string::npos)) / 60.0); 
-							float long_deg = stof(longitude.substr(0,3)) + (stof(longitude.substr(4,std::string::npos)) / 60.0);
+							double lat_deg = stof(latitude.substr(0,2)) + (stof(latitude.substr(3,std::string::npos)) / 60.0); 
+							double long_deg = stof(longitude.substr(0,3)) + (stof(longitude.substr(4,std::string::npos)) / 60.0);
 
 							// Convert degrees to radians
-							float lat_rad = (PI/180.0) * lat_deg;
-							float long_rad = (PI/180.0) * long_deg;
+							double lat_rad = (PI/180.0) * lat_deg;
+							double long_rad = (PI/180.0) * long_deg;
 
 							// Convert to x,y coordinates
-							float x = RADIUS_EARTH * long_rad * cos(lat_rad);
-							float y = RADIUS_EARTH * lat_rad * cos(lat_rad);
+							double x = RADIUS_EARTH * long_rad * cos(lat_rad);
+							double y = RADIUS_EARTH * lat_rad * cos(lat_rad);
 						
 							std::cout << "X: " << x << " Y: " << y << std::endl;
 							
 							// Calculate distance from last logged value
 							// and log if greater than DIST_THRESHOLD
-							float dist_from_logged = sqrt(x*x - logged_x*logged_x + y*y - logged_y*logged_y);
+							double dist_from_logged = sqrt((x-logged_x)*(x-logged_x) + (y-logged_y)*(y-logged_y));
 							if (dist_from_logged > DIST_THRESHOLD)
 							{
 								logged_x = x;
@@ -147,9 +147,9 @@ void* lidarHandler(void *arg)
 
 	// Open log file
 	std::ofstream log;
-	log.open(logFile);
-	log << "x,y,z" << std::endl;
-	log.close();
+	log.open(logFile);		// init log file
+	log << "x,y,z" << std::endl;	//
+	log.close();			//
 
 	char* uart = "/dev/serial0";
 	lidar_handle = serOpen(uart, 115200, 0);
@@ -171,11 +171,10 @@ void* lidarHandler(void *arg)
 
 				// Parse data
 				float z = -1 * (256 * (int) dist_H + (int) dist_L) / 100.0;
-				std::cout << z << std::endl;
 
 				// Log depth in file when flag set
 				if (logDepth) {
-					log.open(logFile);
+					log.open(logFile, std::ofstream::app);			// append to log file
 					logged_z = z;
 					log << logged_x << "," << logged_y << "," << logged_z << std::endl;
 					logDepth = false;
@@ -272,17 +271,21 @@ int main(int argc, char *argv[])
 					//std::cout << "Scaled Y: " << scaled_y << " Z: " << scaled_z << std::endl;
 					
 					// Control rudder (servo)
-					if (scaled_y > 1.0) 
+					if (scaled_y > 1.0 && scaled_z > 0.3) 
 					{
 						servo.pos(180);
 					}
-					else if (scaled_y < -1.0) 
+					else if (scaled_y < -1.0 && scaled_z > 0.3) 
 					{
 						servo.pos(270);
 					}
-					else
+					else if (scaled_z > 0.3)
 					{
 						servo.pos(225-(int)45*scaled_y);
+					}
+					else
+					{
+						servo.pos(225-(int)45*y/10.0);
 					}
 
 					// Control propeller (dc motor)

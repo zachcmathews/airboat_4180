@@ -2,7 +2,13 @@ all: project.o serial.o servo.o motor.o simpleio.o
 	g++ -Wall -pthread project.o serial.o servo.o motor.o simpleio.o -o project -lpigpio -lrt
 
 clean:
-	rm -rfv *.o project
+	rm -rfv *.o project demo
+
+demo: demo.o serial.o servo.o motor.o simpleio.o
+	g++ -Wall -pthread demo.o serial.o servo.o motor.o simpleio.o -o demo -lpigpio -lrt
+
+demo.o: demo.cpp serial.h servo.h motor.h simpleio.h
+	g++ -Wall -c demo.cpp -o demo.o
 
 project.o: project.cpp serial.h servo.h motor.h simpleio.h
 	g++ -Wall -c project.cpp -o project.o
