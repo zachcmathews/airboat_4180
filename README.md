@@ -21,7 +21,7 @@ The Airboat Model 4180 was designed and built for the final design project in Em
 ## Building the boat
 
 ### The frame
-![Airboat Frame](https://github.com/zachcmathews/airboat_4180/blob/master/documentation/frame.png)
+![Airboat Frame](https://github.com/zachcmathews/airboat_4180/blob/master/documentation/frame.jpg)
 #### Attaching the backer rod
 Apply glue below outside rim of paint tray. Stick backer rod to it. Tape each corner to secure while glue dries.
 
@@ -33,7 +33,7 @@ The rudder motor should be mounted directly below it with the screw dead center.
 The LiDAR may be mounted any where the lens is completely submerged and pointing nadir.
 
 ### The electronics
-![The Guts](https://github.com/zachcmathews/airboat_4180/blob/master/documentation/electronics.png)
+![The Guts](https://github.com/zachcmathews/airboat_4180/blob/master/documentation/electronics.jpg)
 
 #### DC Motor (Propeller)
 | Mini-B USB Breakout | Raspberry Pi Zero W | H-Bridge Motor Driver | Brushless DC Motor |
